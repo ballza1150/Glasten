@@ -5,9 +5,10 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -15,18 +16,23 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import org.jibble.simpleftp.SimpleFTP;
+
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity {
 
     //Explicit
     private EditText nameEditText, widthEditText,
-    heightEditText, detailEditText;
+            heightEditText, detailEditText;
     private ImageView imageView;
     private RadioGroup radioGroup;
     private RadioButton doorRadioButton, windowRadioButton;
-    private String nameString, widthString, heighString,
-            deetailString, typeString, imageString,
-    imagePathString, imageFileString;
+    private String nameString, widthString, heightString,
+            detailString, typeString, imageString,
+            imagePathString, imageFileString;
     private boolean imageABoolean = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,20 +49,20 @@ public class MainActivity extends AppCompatActivity {
         doorRadioButton = (RadioButton) findViewById(R.id.radioButton);
         windowRadioButton = (RadioButton) findViewById(R.id.radioButton2);
 
-        //Image Conttroller
+        //Image Controller
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
 
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
                 startActivityForResult(Intent.createChooser(intent,
                         "โปรดเลือกรูปภาพ"), 1);
 
-            }// OnClick
+            }   // onClick
         });
 
-    }// Main Method
+    }   // Main Method
 
     @Override
     protected void onActivityResult(int requestCode,
@@ -68,27 +74,25 @@ public class MainActivity extends AppCompatActivity {
 
             imageABoolean = false;
 
-            // FindI path of Image
-
+            //Find path of Image
             Uri uri = data.getData();
             imagePathString = myFindPathImage(uri);
-
-            Log.d("16SepV1", "imagePathString ==>" + imagePathString);
+            Log.d("16SepV1", "imagePathString ==> " + imagePathString);
 
             //SetImage to imageView
             try {
 
                 Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver()
                         .openInputStream(uri));
-                        imageView.setImageBitmap(bitmap);
+                imageView.setImageBitmap(bitmap);
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-        }// if
+        }   // if
 
-    }// onActivity
+    }   // onActivity
 
     private String myFindPathImage(Uri uri) {
 
@@ -108,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
             strResult = uri.getPath();
         }
 
-
         return strResult;
     }
 
@@ -117,39 +120,68 @@ public class MainActivity extends AppCompatActivity {
         //Get Value From Edit Text
         nameString = nameEditText.getText().toString().trim();
         widthString = widthEditText.getText().toString().trim();
-        heighString = heightEditText.getText().toString().trim();
-        deetailString = detailEditText.getText().toString().trim();
+        heightString = heightEditText.getText().toString().trim();
+        detailString = detailEditText.getText().toString().trim();
 
         //Check Space
         if (nameString.equals("") || widthString.equals("") ||
-                heighString.equals("") || deetailString.equals("")) {
+                heightString.equals("") || detailString.equals("")) {
+
             // Have Space
-
             MyAlert myAlert = new MyAlert(this, R.drawable.doremon48,
-                    "มีช่องว่าง", "กรุณา กรอก ช่องค่ะ");
+                    "มีช่องว่าง", "กรุณากรอก ทุกช่อง คะ");
             myAlert.myDialog();
-
         } else if (!(doorRadioButton.isChecked() || windowRadioButton.isChecked())) {
-            // Un Check RadioButton
+            // UnCheck RadioButton
             MyAlert myAlert = new MyAlert(this, R.drawable.nobita48,
-                    "ยังไม่เลือกชนิด", "กรุณาเลือก ชนิด ด้วยค่ะ");
+                    "ยังไม่เลือกชนิด", "กรุณาเลือก ชนิด ด้วยคะ");
             myAlert.myDialog();
         } else if (imageABoolean) {
-            //Non Choose Image
+            // Non Choose Image
             MyAlert myAlert = new MyAlert(this, R.drawable.bird48,
-                    "ยังไม่ได้เลือกรูป", "กรุณาคลิกที่รูป และเลือกรูป");
+                    "ยังไม่ได้เลือกรูป", "กรุณาคลิกที่รูป และ เลือกรูป");
             myAlert.myDialog();
         } else {
             // Complete Choose Image
-        }
+            uploadImageToServer();
+
+        }   // if
+
 
         Log.d("16SepV1", "imageBoolean ==> " + imageABoolean);
 
-    }// Click Save
+    }   // clickSave
 
-    public void ClickListDataMain(View view) {
+    private void uploadImageToServer() {
+
+        //Create Policy
+        StrictMode.ThreadPolicy threadPolicy = new StrictMode.ThreadPolicy
+                .Builder().permitAll().build();
+        StrictMode.setThreadPolicy(threadPolicy);
+
+        try {
+
+            SimpleFTP simpleFTP = new SimpleFTP();
+            simpleFTP.connect("ftp.swiftcodingthai.com", 21,
+                    "ball1@swiftcodingthai.com", "Abc12345");
+            simpleFTP.bin();
+            simpleFTP.cwd("Image");
+            simpleFTP.stor(new File(imagePathString));
+            simpleFTP.disconnect();
+
+            MyAlert myAlert = new MyAlert(this,
+                    R.drawable.kon48, "Upload Success",
+                    "Upload " + imageFileString + " Success");
+            myAlert.myDialog();
+
+        } catch (Exception e) {
+            Log.d("16SepV1", "e ftp ==> " + e.toString());
+        }
+
+    }   // uploadImageToServer
+
+    public void clickListDataMain(View view) {
 
     }
 
-
-} // Main Class
+}   // Main Class
