@@ -77,7 +77,11 @@ public class MainActivity extends AppCompatActivity {
             //Find path of Image
             Uri uri = data.getData();
             imagePathString = myFindPathImage(uri);
-            Log.d("16SepV1", "imagePathString ==> " + imagePathString);
+            Log.d("16SepV2", "imagePathString ==> " + imagePathString);
+
+            //Find name of File Image
+            imageFileString = imagePathString.substring(imagePathString.lastIndexOf("/"));
+            Log.d("16SepV2", "imageFileString ==> " + imageFileString);
 
             //SetImage to imageView
             try {
