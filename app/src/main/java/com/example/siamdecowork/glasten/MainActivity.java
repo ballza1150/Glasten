@@ -2,6 +2,8 @@ package com.example.siamdecowork.glasten;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -72,6 +74,17 @@ public class MainActivity extends AppCompatActivity {
             imagePathString = myFindPathImage(uri);
 
             Log.d("16SepV1", "imagePathString ==>" + imagePathString);
+
+            //SetImage to imageView
+            try {
+
+                Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver()
+                        .openInputStream(uri));
+                        imageView.setImageBitmap(bitmap);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }// if
 
