@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             imagePathString, imageFileString;
     private boolean imageABoolean = true;
     private ArrayList<String> stringsArrayList;
+    private int indexAnInt = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,11 +63,66 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
 
                 Log.d("6decV1", "arrayList size ==>" + stringsArrayList.size());
+                Log.d("6decV2", "index ==> " + indexAnInt);
+                if (stringsArrayList.size() >= 0) {
+
+                    if (indexAnInt <= 0) {
+
+                        indexAnInt = stringsArrayList.size();
+                        ShowImage(indexAnInt);
+
+                    } else {
+                        indexAnInt -= 1;
+                        ShowImage(indexAnInt);
+                    }
+
+                } else {
+                    Toast.makeText(MainActivity.this, "เลือกรูป", Toast.LENGTH_SHORT).show();
+                }
+
             } // OnClick
+        });
+        nextImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (stringsArrayList.size() > 0) {
+                    if (indexAnInt <= stringsArrayList.size()) {
+
+                        ShowImage(indexAnInt);
+                        indexAnInt += 1;
+                    } else {
+
+                        indexAnInt = 0;
+                        ShowImage(indexAnInt);
+
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "เลือกรูป", Toast.LENGTH_SHORT).show();
+                }
+
+            }// onClick
         });
 
 
     }   // Main Method
+
+    private void ShowImage(int indexAnInt) {
+
+
+        try {
+
+            String strPathImage = stringsArrayList.get(indexAnInt);
+            Log.d("6dexV1", "strPathImage ==> " + strPathImage);
+            File file = new File(strPathImage);
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            imageView.setImageBitmap(bitmap);
+
+        } catch (Exception e) {
+            Log.d("6decV1", "e showImage ==>" + e.toString());
+        }
+
+    }
 
     private void bindWidget() {
 
