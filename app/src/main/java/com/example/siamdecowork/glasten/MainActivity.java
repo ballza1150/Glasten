@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import org.jibble.simpleftp.SimpleFTP;
 
@@ -173,10 +174,7 @@ public class MainActivity extends AppCompatActivity {
             simpleFTP.stor(new File(imagePathString));
             simpleFTP.disconnect();
 
-            MyAlert myAlert = new MyAlert(this,
-                    R.drawable.kon48, "Upload Success",
-                    "Upload " + imageFileString + " Success");
-            myAlert.myDialog();
+            Toast.makeText(MainActivity.this, "Upload Image Finish", Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
             Log.d("16SepV1", "e ftp ==> " + e.toString());
