@@ -111,6 +111,54 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginRight="100dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/question_man"
+                android:id="@+id/imageView4"
+                android:layout_weight="1"
+                android:layout_margin="3dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/question_man"
+                android:id="@+id/imageView5"
+                android:layout_weight="1"
+                android:layout_margin="3dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/question_man"
+                android:id="@+id/imageView6"
+                android:layout_weight="1"
+                android:layout_margin="3dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/question_man"
+                android:id="@+id/imageView7"
+                android:layout_weight="1"
+                android:layout_margin="3dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/question_man"
+                android:id="@+id/imageView8"
+                android:layout_weight="1"
+                android:layout_margin="3dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/linearLayout" >
 

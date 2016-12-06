@@ -20,27 +20,56 @@ import android.widget.Toast;
 import org.jibble.simpleftp.SimpleFTP;
 
 import java.io.File;
+import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     //Explicit
     private EditText nameEditText, widthEditText,
             heightEditText, detailEditText;
-    private ImageView imageView;
+    private ImageView imageView, pic1ImageView, pic2ImageView,
+            pic3ImageView, pic4ImageView, pic5ImageView,
+            backImageView, nextImageView;
     private RadioGroup radioGroup;
     private RadioButton doorRadioButton, windowRadioButton;
     private String nameString, widthString, heightString,
             detailString, typeString, imageString,
             imagePathString, imageFileString;
     private boolean imageABoolean = true;
-
-
+    private ArrayList<String> stringsArrayList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Setup
+        stringsArrayList = new ArrayList<String>();
+
         //Bind Widget
+        bindWidget();
+
+
+        //Image Controller
+        pic1ImageView.setOnClickListener(this);
+        pic2ImageView.setOnClickListener(this);
+        pic3ImageView.setOnClickListener(this);
+        pic4ImageView.setOnClickListener(this);
+        pic5ImageView.setOnClickListener(this);
+
+        // Back & Next Controller
+        backImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.d("6decV1", "arrayList size ==>" + stringsArrayList.size());
+            } // OnClick
+        });
+
+
+    }   // Main Method
+
+    private void bindWidget() {
+
         nameEditText = (EditText) findViewById(R.id.editText);
         widthEditText = (EditText) findViewById(R.id.editText2);
         heightEditText = (EditText) findViewById(R.id.editText3);
@@ -49,21 +78,15 @@ public class MainActivity extends AppCompatActivity {
         radioGroup = (RadioGroup) findViewById(R.id.ragType);
         doorRadioButton = (RadioButton) findViewById(R.id.radioButton);
         windowRadioButton = (RadioButton) findViewById(R.id.radioButton2);
+        pic1ImageView = (ImageView) findViewById(R.id.imageView4);
+        pic2ImageView = (ImageView) findViewById(R.id.imageView5);
+        pic3ImageView = (ImageView) findViewById(R.id.imageView6);
+        pic4ImageView = (ImageView) findViewById(R.id.imageView7);
+        pic5ImageView = (ImageView) findViewById(R.id.imageView8);
+        backImageView = (ImageView) findViewById(R.id.imageView2);
+        nextImageView = (ImageView) findViewById(R.id.imageView3);
 
-        //Image Controller
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                startActivityForResult(Intent.createChooser(intent,
-                        "โปรดเลือกรูปภาพ"), 1);
-
-            }   // onClick
-        });
-
-    }   // Main Method
+    }
 
     @Override
     protected void onActivityResult(int requestCode,
@@ -71,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                                     Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if ((requestCode == 1) && (resultCode == RESULT_OK)) {
+        if (resultCode == RESULT_OK) {
 
             imageABoolean = false;
 
@@ -79,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
             Uri uri = data.getData();
             imagePathString = myFindPathImage(uri);
             Log.d("16SepV2", "imagePathString ==> " + imagePathString);
+            stringsArrayList.add(imagePathString);
 
             //Find name of File Image
             imageFileString = imagePathString.substring(imagePathString.lastIndexOf("/"));
@@ -87,9 +111,13 @@ public class MainActivity extends AppCompatActivity {
             //SetImage to imageView
             try {
 
+                ImageView[] imageViews = new ImageView[]{pic1ImageView, pic2ImageView, pic3ImageView,
+                        pic4ImageView, pic5ImageView};
+
                 Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver()
                         .openInputStream(uri));
                 imageView.setImageBitmap(bitmap);
+                imageViews[requestCode].setImageBitmap(bitmap);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -186,4 +214,33 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onClick(View v) {
+
+        int i = 0;
+
+        switch (v.getId()) {
+            case R.id.imageView4:
+                i = 0;
+                break;
+            case R.id.imageView5:
+                i = 1;
+                break;
+            case R.id.imageView6:
+                i = 2;
+                break;
+            case R.id.imageView7:
+                i = 3;
+                break;
+            case R.id.imageView8:
+                i = 4;
+                break;
+        } // switch
+
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent,
+                "โปรดเลือกรูปภาพ"), i);
+
+    } // onclick
 }   // Main Class
